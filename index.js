@@ -2,7 +2,9 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo'); 
+const MongoStore = require('connect-mongo');
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("./doc/swagger.json");
 require('dotenv').config();
 require('./passportConfig')
 
@@ -17,7 +19,7 @@ app.use(session({
     cookie: { secure: false } 
 }));
 
-
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use(passport.initialize());
 app.use(passport.session());
 
