@@ -29,10 +29,10 @@ router.get('/logout', (req, res) => {
 
 // Route to get the current user's information
 router.get('/current-user', (req, res) => {
-    if (req.isAuthenticated()) { // Check if user is authenticated
-        res.json(req.user); // Send user information as JSON
+    if (req.isAuthenticated()) {
+        res.json(req.user); 
     } else {
-        res.status(401).json({ message: 'Not authenticated' }); // User is not authenticated
+        res.status(401).json({ message: 'Not authenticated' }); 
     }
 });
 

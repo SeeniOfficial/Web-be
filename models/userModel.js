@@ -5,14 +5,15 @@ const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    phone: { type: String },
+    phone: { type:String },
     password: { type: String, required: true },
     isEmailVerified: { type: Boolean, default: false },
     isPhoneVerified: { type: Boolean, default: false },
     role: { type: String, enum: ['user', 'vendor'], default: 'user' },
     location: {
-        type: { type: String, default: 'Point' },
+        type: { type: String, required: false },
         coordinates: { type: [Number] },    
+        
     },
     businessName: { type: String, required: function() { return this.role === 'vendor'; } },
     serviceType: { type: String, required: function() { return this.role === 'vendor'; } },

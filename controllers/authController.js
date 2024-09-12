@@ -13,41 +13,53 @@ const createToken = (id, role, expiresIn = '72h') => {
 
 exports.register = async (req, res) => {
     const { firstName, lastName, email, phone, password, role } = req.body;
-    try {
-        const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ message: 'User already exists' });
-
-        const newUser = new User({ firstName, lastName, email, phone, password, role });
-        await newUser.save();
-
-        const token = createToken(newUser._id);
-        const verifyUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
-        await sendEmail(newUser.email, 'Verify your email', `Click here to verify your email: ${verifyUrl}`);
-
-        res.status(201).json({ message: 'User registered. Check your email to verify your account' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+    if(!firstName || !lastName|| !email || !phone || !password){
+        res.status(404).json({message: "body invalid"})
+    }
+    else{
+        try {
+            const userExists = await User.findOne({ email });
+            console.log(userExists)
+            if (userExists) return res.status(400).json({ message: 'User already exists' });
+    
+            const newUser = new User({ firstName, lastName, email, phone, password, role });
+            await newUser.save();
+    
+            const token = createToken(newUser._id);
+            const verifyUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
+            await sendEmail(newUser.email, 'Verify your email', `Click here to verify your email: ${verifyUrl}`);
+    
+            res.status(201).json({ message: 'User registered. Check your email to verify your account' });
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({ message: 'Server error' });
+        }
     }
 };
 
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not found' });
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-        if (!user.isEmailVerified) return res.status(403).json({ message: 'Email not verified' });
-
-        const token = createToken(user._id, user.role);
-        res.json({ token });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+    if(email == '' || password ==''){
+        res.status(404).json({message: "body invalid"})
     }
-};
+    else{
+        try {
+            const user = await User.findOne({ email });
+            if (!user) return res.status(404).json({ message: 'User not found' });
+    
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    
+            if (!user.isEmailVerified) return res.status(403).json({ message: 'Email not verified' });
+    
+            const token = createToken(user._id, user.role);
+            res.json({ token });
+        } catch (error) {
+            res.status(500).json({ message: 'Server error' });
+        }
+    };
+    }
 
 
 exports.verifyEmail = async (req, res) => {
