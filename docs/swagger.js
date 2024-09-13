@@ -15,8 +15,8 @@ const swaggerAutogen = require("swagger-autogen")();
 const doc = {
   info: {
     version: "2.0.0", // by default: '1.0.0'
-    title: "NCS CBT", // by default: 'REST API'
-    description: "API for NCS CBT", // by default: ''
+    title: "Seeni", // by default: 'REST API'
+    description: "API for Seeni", // by default: ''
     contact: {
       name: "API Support",
       email: "seeniofficail1@gmail.com",

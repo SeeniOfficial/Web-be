@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "2.0.0",
-    "title": "NCS CBT",
-    "description": "API for NCS CBT",
+    "title": "Seeni",
+    "description": "API for Seeni",
     "contact": {
       "name": "API Support",
       "email": "seeniofficail1@gmail.com"
