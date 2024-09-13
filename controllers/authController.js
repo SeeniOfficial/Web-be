@@ -63,7 +63,7 @@ exports.login = async (req, res) => {
 
 
 exports.verifyEmail = async (req, res) => {
-    const { token } = req.query;
+    const { token } = req.params;
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.id);
@@ -73,7 +73,7 @@ exports.verifyEmail = async (req, res) => {
         await user.save();
         res.json({ message: 'Email verified' });
     } catch (error) {
-        res.status(500).json({ message: 'Invalid or expired token' });
+        res.status(500).json({ message: 'Invalid or expired token', error: error.message});
     }
 };
 

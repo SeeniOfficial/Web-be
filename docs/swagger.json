@@ -115,13 +115,13 @@
         }
       }
     },
-    "/api/auth/verify-email": {
+    "/api/auth/verify-email/:token": {
       "get": {
         "description": "",
         "parameters": [
           {
             "name": "token",
-            "in": "query",
+            "in": "params",
             "type": "string"
           }
         ],
