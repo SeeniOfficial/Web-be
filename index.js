@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const swaggerUI = require("swagger-ui-express");
-const swaggerDocument = require("./doc/swagger.json");
+const swaggerDocument = require("./docs/swagger.json");
 
 dotenv.config();
 
