@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema({
     twoFactorEnabled: { type: Boolean, default: false },
     twoFactorCode: { type: String },
     twoFactorExpires: { type: Date },
+    profile: { type: String },  
+    linkedinUrl: { type: String },  
 }, { timestamps: true });
 
 userSchema.index({ location: '2dsphere' });
