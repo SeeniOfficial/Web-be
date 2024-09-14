@@ -26,7 +26,7 @@ exports.register = async (req, res) => {
             await newUser.save();
     
             const token = createToken(newUser._id);
-            const verifyUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
+            const verifyUrl = `${process.env.BASE_URL}/verify-email/${token}`;
             await sendEmail(newUser.email, 'Verify your email', `Click here to verify your email: ${verifyUrl}`);
     
             res.status(201).json({ message: 'User registered. Check your email to verify your account' });
@@ -87,7 +87,7 @@ exports.resendVerificationEmail = async (req, res) => {
         if (user.isEmailVerified) return res.status(400).json({ message: 'Email already verified' });
 
         const token = createToken(user._id);
-        const verifyUrl = `${process.env.BASE_URL}/verify-email?token=${token}`;
+        const verifyUrl = `${process.env.BASE_URL}/verify-email/${token}`;
         await sendEmail(user.email, 'Resend Verification', `Click here to verify your email: ${verifyUrl}`);
 
         res.json({ message: 'Verification email sent' });
