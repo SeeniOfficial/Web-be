@@ -28,7 +28,6 @@ exports.register = async (req, res) => {
             const token = createToken(newUser._id);
             const verifyUrl = `${process.env.BASE_URL}/verify-email/${token}`;
             await sendEmail(newUser.email, 'Verify your email', `Click here to verify your email: ${verifyUrl}`);
-    
             res.status(201).json({ message: 'User registered. Check your email to verify your account' });
         } catch (error) {
             console.log(error.message)
@@ -62,20 +61,34 @@ exports.login = async (req, res) => {
     }
 
 
-exports.verifyEmail = async (req, res) => {
-    const { token } = req.params;
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.id);
-        if (!user) return res.status(404).json({ message: 'User not found' });
+    exports.verifyEmail = async (req, res) => {
+        const { token } = req.params;
+        try {
 
-        user.isEmailVerified = true;
-        await user.save();
-        res.json({ message: 'Email verified' });
-    } catch (error) {
-        res.status(500).json({ message: 'Invalid or expired token', error: error.message});
-    }
-};
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            
+
+            const user = await User.findById(decoded.id);
+            if (!user) return res.status(404).json({ message: 'User not found' });
+    
+
+            if (user.isEmailVerified) {
+                return res.status(400).json({ message: 'Email is already verified' });
+            }
+    
+            user.isEmailVerified = true;
+            await user.save();
+
+            res.json({ message: 'Email successfully verified' });
+        } catch (error) {
+
+            if (error instanceof jwt.TokenExpiredError) {
+                return res.status(400).json({ message: 'Token has expired' });
+            }
+            return res.status(500).json({ message: 'Invalid or expired token', error: error.message });
+        }
+    };
+    
 
 
 exports.resendVerificationEmail = async (req, res) => {
