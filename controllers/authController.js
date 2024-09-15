@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
             if (!user.isEmailVerified) return res.status(403).json({ message: 'Email not verified' });
     
             const token = createToken(user._id, user.role);
-            res.json({ token });
+            res.json({ token, user});
         } catch (error) {
             res.status(500).json({ message: 'Server error' });
         }
