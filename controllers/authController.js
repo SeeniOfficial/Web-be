@@ -139,10 +139,12 @@ exports.resetPassword = async (req, res) => {
         const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
         const user = await User.findOne({
             resetPasswordToken: resetTokenHash,
-            resetPasswordExpire: { $gt: Date.now() }
+            // resetPasswordExpire: { $gt: Date.now() }
         });
 
-        if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
+        if (!user) return res.status(400).json({ message: 'Invalid token' });
+
+        // if(user.resetPasswordExpire > Date.now()) return res.json({message: "Expired token"})
 
         user.password = password;
         user.resetPasswordToken = undefined;
